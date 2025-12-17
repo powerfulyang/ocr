@@ -69,7 +69,8 @@ def index():
     return render_template("index.html")
 
 
-if __name__ == "__main__":
+def init_directories():
+    """初始化必要的目录"""
     # 确保templates目录存在
     templates_dir = os.path.join(
         os.path.dirname(os.path.abspath(__file__)), "templates"
@@ -82,4 +83,21 @@ if __name__ == "__main__":
     if not os.path.exists(temp_dir):
         os.makedirs(temp_dir)
 
-    app.run(host="0.0.0.0", port=5000, threaded=True)
+
+# 初始化目录
+init_directories()
+
+if __name__ == "__main__":
+    import subprocess
+    import sys
+
+    # 使用 Gunicorn 作为生产服务器
+    subprocess.run([
+        sys.executable, "-m", "gunicorn",
+        "--bind", "0.0.0.0:5000",
+        "--workers", "1",
+        "--threads", "8",
+        "--timeout", "0",
+        "--access-logfile", "-",
+        "main:app"
+    ])
