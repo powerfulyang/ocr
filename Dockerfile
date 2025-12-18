@@ -4,7 +4,8 @@ RUN apt-get update && apt-get install -y \
     libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip install flask gunicorn
+RUN RUN --mount=type=cache,target=/root/.cache/pip \
+ pip install flask gunicorn
 
 COPY wcocr.cpython-312-x86_64-linux-gnu.so /app/wcocr.cpython-312-x86_64-linux-gnu.so
 
